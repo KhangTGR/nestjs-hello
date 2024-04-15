@@ -1,33 +1,42 @@
-# Build BASE
-FROM node:20-alpine as BASE
-
+# Stage 1: Install dependencies
+FROM node:20-alpine AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
+
 COPY package.json package-lock.json ./
-RUN apk add --no-cache git \
-    && npm install \
-    && npm cache clean --force
+RUN npm install --omit=optional
 
-# Build Image
-FROM node:20-alpine AS BUILD
-
+# Stage 2: Build the application
+FROM deps AS builder
 WORKDIR /app
-COPY --from=BASE /app/node_modules ./node_modules
+
 COPY . .
-RUN apk add --no-cache git curl \
-    && npm run build \
-    && rm -rf node_modules \
-    && npm install --production --ignore-scripts --prefer-offline 
 
-# Build production
-FROM node:20-alpine AS PRODUCTION
+ENV NEXT_TELEMETRY_DISABLED 1
 
-WORKDIR /app
+RUN npm run build
 
-COPY --from=BUILD /app/package.json /app/package-lock.json ./
-COPY --from=BUILD /app/node_modules ./node_modules
-# COPY --from=BUILD /app/.next ./.next
-# COPY --from=BUILD /app/public ./public
+# Stage 3: Create the final image
+FROM node:20-alpine AS runner
+
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /home/nextjs
+
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+COPY --from=builder --chown=nextjs:nodejs /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json .
+COPY --from=builder /app/tsconfig* .
+
+USER nextjs
 
 EXPOSE 3000
+
+ENV PORT 3000
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
 
 CMD ["npm", "start"]
