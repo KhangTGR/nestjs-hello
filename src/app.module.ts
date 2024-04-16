@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { HelloModule } from './hello/hello.module';
 import { CatsModule } from './cats/cats.module';
-// import { DatabaseModule } from './database/database.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -11,7 +11,7 @@ import { CatsModule } from './cats/cats.module';
     }),
     HelloModule,
     CatsModule,
-    // DatabaseModule,
+    DatabaseModule,
   ],
   controllers: [],
   providers: [],
