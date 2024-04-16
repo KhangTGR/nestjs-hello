@@ -1,40 +1,29 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Req,
-  HttpCode,
-  Header,
-  Redirect,
-  Query,
-  Param,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { CatsService } from './cats.service';
+import { CreateCatDto } from './dto/create-cat.dto';
+import { Cat } from './schemas/cat.schema';
 
 @Controller('cats')
 export class CatsController {
-  @Post('add')
-  @HttpCode(201)
-  @Header('Cache-Control', 'none')
-  create(@Req() request: Request): string {
-    console.log('The request from the client: ', request.body);
-    return 'This action adds a new cat';
+  constructor(private readonly catsService: CatsService) {}
+
+  @Post()
+  async create(@Body() createCatDto: CreateCatDto) {
+    await this.catsService.create(createCatDto);
   }
-  @Get('ab*cd')
-  @HttpCode(200)
-  @Redirect('https://nestjs.com', 301)
-  findAll(@Req() request: Request): string {
-    console.log('The request from the client: ', request.body);
-    return 'This action returns all cats';
+
+  @Get()
+  async findAll(): Promise<Cat[]> {
+    return this.catsService.findAll();
   }
-  @Get('docs')
-  @Redirect('https://docs.nestjs.com', 302)
-  getDocs(@Query('version') version) {
-    if (version && version === '5') {
-      return { url: 'https://docs.nestjs.com/v5/' };
-    }
-  }
+
   @Get(':id')
-  findOne(@Param('id') id: string): string {
-    return `This action returns a #${id} cat`;
+  async findOne(@Param('id') id: string): Promise<Cat> {
+    return this.catsService.findOne(id);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    return this.catsService.delete(id);
   }
 }
