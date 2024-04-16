@@ -1,5 +1,5 @@
 ###################
-# BUILD FOR LOCAL DEVELOPMENT
+# BUILD FOR LOCAL 'DEVELOPMENT'
 ###################
 
 FROM node:20-alpine As development
@@ -15,7 +15,7 @@ COPY --chown=node:node . .
 USER node
 
 ###################
-# BUILD FOR PRODUCTION
+# 'BUILD' FOR PRODUCTION
 ###################
 
 FROM node:20-alpine As build
@@ -37,7 +37,7 @@ RUN npm ci --only=production && npm cache clean --force
 USER node
 
 ###################
-# PRODUCTION
+# 'PRODUCTION'
 ###################
 
 FROM node:20-alpine As production

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { HelloModule } from './hello/hello.module';
-import { CatsModule } from './cats/cats.module';
+import { HelloModule } from './modules/hello/hello.module';
+import { CatsModule } from './modules/cats/cats.module';
 import { DatabaseModule } from './database/database.module';
 
 @Module({

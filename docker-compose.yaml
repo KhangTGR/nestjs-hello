@@ -7,48 +7,48 @@ services:
       PGDATA: /data/postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123}
       POSTGRES_USER: ${POSTGRES_USER:-admin}
-      DATABASE_HOST: ${DATABASE_HOST:-db}
-      # DATABASE_NAME: ${DATABASE_NAME:-khangdb}
+      POSTGRES_DB: ${POSTGRES_DB:-khangdb}
+      DATABASE_HOST: ${POSTGRES_HOST:-db}
     container_name: nest-postgresdb
     volumes:
       - postgres_data:/data/postgres
     ports:
       - '5432:5432'
-    # networks:
-    #   - server-network
+    networks:
+      - app-network
     restart: unless-stopped
 
-  server:
-    image: khangtgr/nestjs-server
-    container_name: nest-server
-    environment:
-      PORT: ${PORT}
-      DATABASE_HOST: ${DATABASE_HOST:-db}
-      DATABASE_PORT: ${DATABASE_PORT:-5432}
-      DATABASE_USER: ${DATABASE_USER:-admin}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-123}
-      # DATABASE_NAME: ${DATABASE_NAME:-khangdb}
-    ports:
-      - '3000:3000'
-    depends_on:
-      - db
-    volumes:
-      - ./src:/app/src
-    # networks:
-    #   - server-network
+  # server:
+  #   image: khangtgr/nestjs-server
+  #   container_name: nest-server
+  #   environment:
+  #     PORT: ${PORT}
+  #     DATABASE_HOST: ${DATABASE_HOST:-db}
+  #     DATABASE_PORT: ${DATABASE_PORT:-5432}
+  #     DATABASE_USER: ${DATABASE_USER:-admin}
+  #     DATABASE_PASSWORD: ${DATABASE_PASSWORD:-123}
+  #     # DATABASE_NAME: ${DATABASE_NAME:-khangdb}
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - ./src:/app/src
+  #   # networks:
+  #   #   - app-network
 
-  nginx:
-    image: nginx:latest
-    container_name: nest-nginx
-    ports:
-      - '8080:8080'
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - server
-    # networks:
-    #   - server-network
-    restart: unless-stopped
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: nest-nginx
+  #   ports:
+  #     - '8080:8080'
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #   depends_on:
+  #     - server
+  #   # networks:
+  #   #   - app-network
+  #   restart: unless-stopped
 
   pgadmin:
     image: dpage/pgadmin4
@@ -63,13 +63,13 @@ services:
       - "${PGADMIN_PORT:-5050}:80"
     depends_on:
       - db
-    # networks:
-    #   - server-network
+    networks:
+      - app-network
     restart: unless-stopped
 
-# networks:
-#   server-network:
-#     driver: bridge
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   postgres_data:
