@@ -1,6 +1,8 @@
-import { HelloModule } from './hello/hello.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { HelloModule } from './hello/hello.module';
+import { CatsModule } from './cats/cats.module';
+// import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -8,6 +10,8 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
     HelloModule,
+    CatsModule,
+    // DatabaseModule,
   ],
   controllers: [],
   providers: [],
