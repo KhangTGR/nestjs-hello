@@ -1,33 +1,48 @@
-# Build BASE
-FROM node:20-alpine as BASE
+###################
+# BUILD FOR LOCAL DEVELOPMENT
+###################
 
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN apk add --no-cache git \
-    && npm install \
-    && npm cache clean --force
+FROM node:20-alpine As development
 
-# Build Image
-FROM node:20-alpine AS BUILD
+WORKDIR /usr/src/app
 
-WORKDIR /app
-COPY --from=BASE /app/node_modules ./node_modules
-COPY . .
-RUN apk add --no-cache git curl \
-    && npm run build \
-    && rm -rf node_modules \
-    && npm install --production --ignore-scripts --prefer-offline 
+COPY --chown=node:node package*.json ./
 
-# Build production
-FROM node:20-alpine AS PRODUCTION
+RUN npm ci
 
-WORKDIR /app
+COPY --chown=node:node . .
 
-COPY --from=BUILD /app/package.json /app/package-lock.json ./
-COPY --from=BUILD /app/node_modules ./node_modules
-# COPY --from=BUILD /app/.next ./.next
-# COPY --from=BUILD /app/public ./public
+USER node
 
-EXPOSE 3000
+###################
+# BUILD FOR PRODUCTION
+###################
 
-CMD ["npm", "start"]
+FROM node:20-alpine As build
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+
+COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+
+COPY --chown=node:node . .
+
+RUN npm run build
+
+ENV NODE_ENV production
+
+RUN npm ci --only=production && npm cache clean --force
+
+USER node
+
+###################
+# PRODUCTION
+###################
+
+FROM node:20-alpine As production
+
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+
+CMD [ "node", "dist/main.js" ]
