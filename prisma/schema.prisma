@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model School {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  email     String    @unique
+  address   String    @unique
+  phone     String    @unique
+  theme     Theme
+  logo      String    
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+enum Theme {
+  RED
+  BLUE
+  GREEN
+}
