@@ -9,3 +9,7 @@ LICENSE
 .docker
 .gitlab
 .git
+.circleci
+nginx.conf
+script.sh
+test/

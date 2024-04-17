@@ -2,17 +2,11 @@
 # BUILD FOR LOCAL 'DEVELOPMENT'
 ###################
 
-FROM node:20-alpine As development
+FROM node:20-alpine AS development
 
-WORKDIR /usr/src/app
-
-COPY --chown=node:node package*.json ./
-
-COPY --chown=node:node prisma ./prisma/
+COPY --chown=node:node package*.json prisma/ ./
 
 RUN npm ci
-
-COPY --chown=node:node . .
 
 USER node
 
@@ -20,16 +14,9 @@ USER node
 # 'BUILD' FOR PRODUCTION
 ###################
 
-FROM node:20-alpine As build
+FROM node:20-alpine AS build
 
-WORKDIR /usr/src/app
-
-COPY --chown=node:node package*.json ./
-
-COPY --chown=node:node prisma ./prisma/
-
-COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
-
+COPY --chown=node:node --from=development ./node_modules ./node_modules
 COPY --chown=node:node . .
 
 RUN npm run build
@@ -44,9 +31,11 @@ USER node
 # 'PRODUCTION'
 ###################
 
-FROM node:20-alpine As production
+FROM node:20-alpine AS production
 
-COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+WORKDIR /usr/src/app
 
-CMD [ "node", "dist/main.js" ]
+COPY --chown=node:node --from=build ./node_modules ./node_modules
+COPY --chown=node:node --from=build ./dist ./dist
+
+CMD [ "node", "dist/src/main.js" ]

@@ -6,7 +6,7 @@ docker build -t khangtgr/nestjs-server .
 docker push khangtgr/nestjs-server
 
 # Cleanning Docker system
-docker stop $(docker ps -aq)
+docker kill $(docker ps -aq)
 docker rmi -f $(docker images -aq)
 docker system prune -a --force
 docker volume prune -f
