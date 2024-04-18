@@ -18,16 +18,10 @@ export class CreateSchoolDto {
   phone: string;
 
   @IsNotEmpty()
-  @IsEnum(['RED', 'BLUE', 'GREEN'])
-  theme: Theme;
+  @IsString()
+  theme: string;
 
   @IsNotEmpty()
   @IsString()
   logo: string;
-}
-
-enum Theme {
-  RED = 'RED',
-  BLUE = 'BLUE',
-  GREEN = 'GREEN',
 }

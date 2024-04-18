@@ -8,13 +8,99 @@ datasource db {
 }
 
 model School {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  email     String    @unique
-  address   String    @unique
-  phone     String    @unique
-  theme     String
-  logo      String    
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id              Int          @id @default(autoincrement())
+  name            String       @unique
+  email           String       @unique
+  address         String       @unique
+  phone           String       @unique
+  theme           String
+  logo            String
+  numberOfClasses Int          @default(0)
+  numberOfStudents Int         @default(0)
+  numberOfTeachers Int         @default(0)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  classes         Class[]
+  teachers        Teacher[]
+  students        Student[]
+}
+
+model Teacher {
+  id              Int          @id @default(autoincrement())
+  name            String
+  email           String       @unique
+  phone           String       @unique
+  numberOfClasses Int          @default(0)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  school          School?      @relation(fields: [schoolId], references: [id])
+  schoolId        Int?
+  
+  classes         Class[]
+}
+
+model Parent {
+  id              Int          @id @default(autoincrement())
+  name            String
+  email           String       @unique
+  phone           String       @unique
+  numberOfStudents Int         @default(0)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  students        Student[]
+}
+
+model Student {
+  id              Int          @id @default(autoincrement())
+  name            String
+  className       String
+  classId         Int
+  school          School       @relation(fields: [schoolId], references: [id])
+  schoolId        Int
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  class           Class?       @relation(fields: [classId], references: [id])
+  parents         Parent[]
+}
+
+model Class {
+  id                  Int          @id @default(autoincrement())
+  name                String
+  numberOfStudents    Int          @default(0)
+  numberOfEatingSchedules Int     @default(0)
+  numberOfStudySchedules Int      @default(0)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  
+  school              School       @relation(fields: [schoolId], references: [id])
+  schoolId            Int
+  
+  teacher             Teacher?     @relation(fields: [teacherId], references: [id])
+  teacherId           Int?
+  
+  students            Student[]
+  eatingSchedules     EatingSchedule[]
+  studySchedules      StudySchedule[]
+}
+
+model EatingSchedule {
+  id                  Int          @id @default(autoincrement())
+  time                String
+  class               Class        @relation(fields: [classId], references: [id])
+  classId             Int
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+}
+
+model StudySchedule {
+  id                  Int          @id @default(autoincrement())
+  time                String
+  class               Class        @relation(fields: [classId], references: [id])
+  classId             Int
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
 }
