@@ -1,17 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-// import { HelloModule } from './modules/hello/hello.module';
-import { CatsModule } from './modules/cats/cats.module';
-// import { DatabaseModule } from './database/database.module';
+// import { HelloModule } from './hello/hello.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { SchoolModule } from './school/school.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     // HelloModule,
-    CatsModule,
-    // DatabaseModule,
+    PrismaModule,
+    SchoolModule,
   ],
   controllers: [],
   providers: [],

@@ -3,39 +3,49 @@ version: '3.9'
 services:
   db:
     image: postgres
-    environment:
-      PGDATA: /data/postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123}
-      POSTGRES_USER: ${POSTGRES_USER:-admin}
-      POSTGRES_DB: ${POSTGRES_DB:-khangdb}
-      DATABASE_HOST: ${POSTGRES_HOST:-db}
-    container_name: nest-postgresdb
+    env_file:
+      - .env
+    container_name: nest-db
     volumes:
-      - postgres_data:/data/postgres
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
     networks:
       - app-network
     restart: unless-stopped
 
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    container_name: nest-pgadmin
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT}:80"
+    depends_on:
+      - db
+    networks:
+      - app-network
+    restart: unless-stopped
+    
   # server:
-  #   image: khangtgr/nestjs-server
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   # image: khangtgr/nestjs-server
+  #   env_file:
+  #     - .env
   #   container_name: nest-server
-  #   environment:
-  #     PORT: ${PORT}
-  #     DATABASE_HOST: ${DATABASE_HOST:-db}
-  #     DATABASE_PORT: ${DATABASE_PORT:-5432}
-  #     DATABASE_USER: ${DATABASE_USER:-admin}
-  #     DATABASE_PASSWORD: ${DATABASE_PASSWORD:-123}
-  #     # DATABASE_NAME: ${DATABASE_NAME:-khangdb}
   #   ports:
   #     - '3000:3000'
   #   depends_on:
   #     - db
   #   volumes:
   #     - ./src:/app/src
-  #   # networks:
-  #   #   - app-network
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
 
   # nginx:
   #   image: nginx:latest
@@ -46,26 +56,9 @@ services:
   #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
   #   depends_on:
   #     - server
-  #   # networks:
-  #   #   - app-network
+  #   networks:
+  #     - app-network
   #   restart: unless-stopped
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: nest-pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    depends_on:
-      - db
-    networks:
-      - app-network
-    restart: unless-stopped
 
 networks:
   app-network:

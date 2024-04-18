@@ -9,3 +9,10 @@ LICENSE
 .docker
 .gitlab
 .git
+.circleci
+nginx.conf
+script.sh
+test/
+docker-compose.yaml
+.eslint*
+.prettier*
