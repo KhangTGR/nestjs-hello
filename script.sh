@@ -19,10 +19,14 @@ docker images -a
 
 # Starting up docker compose
 docker compose up --build -d
+# Migrate schema
+docker compose run server npx prisma migrate dev --schema=./prisma/schema.prisma
 docker ps -a
 
 # Cleanning up docker compose
+docker compose down
 docker compose down --rmi all --volumes --remove-orphans
+docker system prune -a --force
 docker system df
 docker volume ls
 docker images -a

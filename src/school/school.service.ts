@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Theme } from '@prisma/client';
 
 @Injectable()
 export class SchoolService {
@@ -14,11 +13,8 @@ export class SchoolService {
     });
   }
 
-  async findAll(theme?: Theme) {
-    if (theme)
-      return this.prisma.school.findMany({
-        where: { theme },
-      });
+  async findAll() {
+    return this.prisma.school.findMany();
   }
 
   findOne(id: number) {

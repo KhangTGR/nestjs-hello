@@ -13,3 +13,6 @@ LICENSE
 nginx.conf
 script.sh
 test/
+docker-compose.yaml
+.eslint*
+.prettier*

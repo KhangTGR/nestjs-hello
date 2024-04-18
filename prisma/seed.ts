@@ -1,4 +1,4 @@
-import { PrismaClient, Theme } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 // initialize Prisma Client
 const prisma = new PrismaClient();
@@ -13,7 +13,7 @@ async function main() {
       email: 'school1@example.com',
       address: 'Address 1',
       phone: '1234567890',
-      theme: Theme.RED,
+      theme: "RED",
       logo: 'logo1.png',
     },
   });
@@ -26,7 +26,7 @@ async function main() {
       email: 'school2@example.com',
       address: 'Address 2',
       phone: '1234567891',
-      theme: Theme.BLUE,
+      theme: "BLUE",
       logo: 'logo2.png',
     },
   });
@@ -39,7 +39,7 @@ async function main() {
       email: 'school3@example.com',
       address: 'Address 3',
       phone: '1234567892',
-      theme: Theme.GREEN,
+      theme: "GREEN",
       logo: 'logo3.png',
     },
   });
@@ -52,7 +52,7 @@ async function main() {
       email: 'school4@example.com',
       address: 'Address 4',
       phone: '1234567893',
-      theme: Theme.RED,
+      theme: "RED",
       logo: 'logo4.png',
     },
   });
@@ -65,7 +65,7 @@ async function main() {
       email: 'school5@example.com',
       address: 'Address 5',
       phone: '1234567894',
-      theme: Theme.BLUE,
+      theme: "BLUE",
       logo: 'logo5.png',
     },
   });
@@ -78,7 +78,7 @@ async function main() {
       email: 'school6@example.com',
       address: 'Address 6',
       phone: '1234567895',
-      theme: Theme.GREEN,
+      theme: "GREEN",
       logo: 'logo6.png',
     },
   });
@@ -91,7 +91,7 @@ async function main() {
       email: 'school7@example.com',
       address: 'Address 7',
       phone: '1234567896',
-      theme: Theme.RED,
+      theme: "RED",
       logo: 'logo7.png',
     },
   });
@@ -104,7 +104,7 @@ async function main() {
       email: 'school8@example.com',
       address: 'Address 8',
       phone: '1234567897',
-      theme: Theme.BLUE,
+      theme: "BLUE",
       logo: 'logo8.png',
     },
   });
@@ -117,7 +117,7 @@ async function main() {
       email: 'school9@example.com',
       address: 'Address 9',
       phone: '1234567898',
-      theme: Theme.GREEN,
+      theme: "GREEN",
       logo: 'logo9.png',
     },
   });
@@ -130,7 +130,7 @@ async function main() {
       email: 'school10@example.com',
       address: 'Address 10',
       phone: '1234567899',
-      theme: Theme.RED,
+      theme: "RED",
       logo: 'logo10.png',
     },
   });

@@ -1,6 +1,3 @@
--- CreateEnum
-CREATE TYPE "Theme" AS ENUM ('RED', 'BLUE', 'GREEN');
-
 -- CreateTable
 CREATE TABLE "School" (
     "id" SERIAL NOT NULL,
@@ -8,7 +5,7 @@ CREATE TABLE "School" (
     "email" TEXT NOT NULL,
     "address" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
-    "theme" "Theme" NOT NULL,
+    "theme" TEXT NOT NULL,
     "logo" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -27,6 +24,3 @@ CREATE UNIQUE INDEX "School_address_key" ON "School"("address");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "School_phone_key" ON "School"("phone");
-
--- CreateIndex
-CREATE UNIQUE INDEX "School_logo_key" ON "School"("logo");
